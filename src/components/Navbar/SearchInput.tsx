@@ -1,22 +1,28 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { NodeNextRequest } from "next/dist/server/base-http/node";
 import React from "react";
 
-type SearchInputProps = {};
+type SearchInputProps = {
+  user:null;
+};
 
-const SearchInput: React.FC<SearchInputProps> = () => {
-  return (
-    <Flex flexGrow={1}>
+const SearchInput: React.FC<SearchInputProps> = ({user}) => {
+  return(
+  <Flex
+      flexGrow={1}
+      mr={2}
+      alignItems="center"
+    >
       <InputGroup>
         <InputLeftElement
-          pointerEvents='none'
-          children={<Search2Icon color='gray.300' />}
-        />
+          pointerEvents="none"
+          color="gray.400"
+        >
+          <Search2Icon mb={2} />
+        </InputLeftElement>
         <Input
-          type='search'
-          placeholder='Search Reddit'
-          fontSize='10pt'
+          placeholder="Search Reddit"
+          fontSize="10pt"
           _placeholder={{ color: "gray.500" }}
           _hover={{
             bg: "white",
@@ -28,8 +34,8 @@ const SearchInput: React.FC<SearchInputProps> = () => {
             border: "1px solid",
             borderColor: "blue.500",
           }}
-          height='34px'
-          bg='gray.50'
+          height="34px"
+          bg="gray.50"
         />
       </InputGroup>
     </Flex>
