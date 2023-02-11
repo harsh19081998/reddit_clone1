@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { ModalView } from "../../atoms/authModelAtom";
-import InputItem from "../../components/Layout/InputItem";
-import { auth } from "../../firebase/clientApp";
-import { FIREBASE_ERRORS } from "../../firebase/error";
-type LoginProps = {
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { ModalView } from "../../../atoms/authModelAtom";
+import InputItem from "../../Layout/InputItem";
+import { auth } from "../../../firebase/clientApp";
+import { FIREBASE_ERRORS } from "../../../firebase/error";
+import { confirmPasswordReset } from "firebase/auth";
+
+type SignUpProps = {
   toggleView: (view: ModalView) => void;
 };
 
-const Login: React.FC<LoginProps> = ({ toggleView }) => {
+const SignUp: React.FC<SignUpProps> = ({ toggleView }) => {
   const [form, setForm] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [formError, setFormError] = useState("");
-
-  const [signInWithEmailAndPassword, _, loading, authError] =
-    useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, _, loading, authError] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,8 +28,13 @@ const Login: React.FC<LoginProps> = ({ toggleView }) => {
       return setFormError("Please enter a valid email");
     }
 
+    if (form.password !== form.confirmPassword) {
+      return setFormError("Passwords do not match");
+    }
+
     // Valid form inputs
-    signInWithEmailAndPassword(form.email, form.password);
+    createUserWithEmailAndPassword(form.email, form.password);
+    setForm({ email: "", password: "", confirmPassword: "" });
   };
 
   const onChange = ({
@@ -45,6 +52,7 @@ const Login: React.FC<LoginProps> = ({ toggleView }) => {
         name="email"
         placeholder="email"
         type="text"
+        value={form.email}
         mb={2}
         onChange={onChange}
       />
@@ -52,6 +60,15 @@ const Login: React.FC<LoginProps> = ({ toggleView }) => {
         name="password"
         placeholder="password"
         type="password"
+        value={form.password}
+        mb={2}
+        onChange={onChange}
+      />
+      <InputItem
+        name="confirmPassword"
+        placeholder="confirm password"
+        type="password"
+        value={form.confirmPassword}
         onChange={onChange}
       />
       <Text textAlign="center" mt={2} fontSize="10pt" color="red">
@@ -66,33 +83,20 @@ const Login: React.FC<LoginProps> = ({ toggleView }) => {
         type="submit"
         isLoading={loading}
       >
-        Log In
+        Sign Up
       </Button>
-      <Flex justifyContent="center" mb={2}>
-        <Text fontSize="9pt" mr={1}>
-          Forgot your password?
-        </Text>
-        <Text
-          fontSize="9pt"
-          color="blue.500"
-          cursor="pointer"
-          onClick={() => toggleView("resetPassword")}
-        >
-          Reset
-        </Text>
-      </Flex>
       <Flex fontSize="9pt" justifyContent="center">
-        <Text mr={1}>New here?</Text>
+        <Text mr={1}>Have an account?</Text>
         <Text
           color="blue.500"
           fontWeight={700}
           cursor="pointer"
-          onClick={() => toggleView("signup")}
+          onClick={() => toggleView("login")}
         >
-          SIGN UP
+          LOG IN
         </Text>
       </Flex>
     </form>
   );
 };
-export default Login;
+export default SignUp;

@@ -1,15 +1,19 @@
-import { Search2Icon } from "@chakra-ui/icons";
-import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import React from "react";
+import { Flex, InputGroup, InputLeftElement, Input } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+//import { auth } from "firebase-admin";
+//import { user } from "firebase-functions/v1/auth";
+import { User } from "firebase/auth";
 
 type SearchInputProps = {
-  user:null;
+  user: User;
 };
 
-const SearchInput: React.FC<SearchInputProps> = ({user}) => {
-  return(
-  <Flex
+const SearchInput: React.FC<SearchInputProps> = ({ user }) => {
+  return (
+    <Flex
       flexGrow={1}
+      maxWidth={user ? "auto" : "600px"}
       mr={2}
       alignItems="center"
     >
@@ -17,8 +21,9 @@ const SearchInput: React.FC<SearchInputProps> = ({user}) => {
         <InputLeftElement
           pointerEvents="none"
           color="gray.400"
+          // children={<SearchIcon mb={2} />}
         >
-          <Search2Icon mb={2} />
+          <SearchIcon mb={2} />
         </InputLeftElement>
         <Input
           placeholder="Search Reddit"
